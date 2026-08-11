@@ -15,6 +15,12 @@ const INDEPENDENCE_NOTICE = [
   "No reemplaza a las autoridades ni a los organismos oficiales de emergencia. Ante una emergencia, llama al 123.",
 ].join("\n");
 
+const ALERT_CHANNEL_PURPOSE =
+  `📡 El canal ${CHANNEL_USERNAME} existe para que rescatistas y voluntarios reciban en tiempo real lo que la comunidad reporta aquí.`;
+
+const MISSING_PEOPLE_NOTICE =
+  `Este bot NO gestiona búsqueda de personas. Para eso existe [ColombiaTeBusca (colombiatebusca.com)](${COLOMBIA_TE_BUSCA_URL}), una plataforma independiente y sin ninguna relación con Faro Colombia — solo la mencionamos aquí como referencia útil.`;
+
 const START_MESSAGE = [
   "*Faro Colombia 🇨🇴*",
   "",
@@ -22,13 +28,15 @@ const START_MESSAGE = [
   "",
   INDEPENDENCE_NOTICE,
   "",
+  ALERT_CHANNEL_PURPOSE,
+  "",
   "*Comandos*",
   "/reportar",
   "/emergencia",
   "/ayuda",
   "",
   "*Personas desaparecidas*",
-  `Consulta [ColombiaTeBusca](${COLOMBIA_TE_BUSCA_URL}), una plataforma ciudadana independiente de Faro Colombia 🇨🇴.`,
+  MISSING_PEOPLE_NOTICE,
   "",
   `Los reportes confirmados se publican en [${CHANNEL_USERNAME}](${CHANNEL_URL}).`,
   `Bot público: [${BOT_USERNAME}](${BOT_URL}).`,
@@ -46,6 +54,8 @@ const HELP_MESSAGE = [
   "",
   INDEPENDENCE_NOTICE,
   "",
+  ALERT_CHANNEL_PURPOSE,
+  "",
   "*Cómo usarlo*",
   "/reportar abre el flujo guiado para rescate urgente, daño estructural, suministros, refugio o centro de acopio.",
   "/emergencia muestra las líneas oficiales de Colombia.",
@@ -53,7 +63,7 @@ const HELP_MESSAGE = [
   "Solo puedes confirmar 3 reportes por hora.",
   "",
   "*Personas desaparecidas*",
-  `Usa [ColombiaTeBusca](${COLOMBIA_TE_BUSCA_URL}). Es una plataforma ciudadana independiente y no comparte datos con Faro Colombia 🇨🇴.`,
+  MISSING_PEOPLE_NOTICE,
   "",
   `Todos los reportes confirmados se publican en [${CHANNEL_USERNAME}](${CHANNEL_URL}) como información ciudadana no verificada.`,
   `Política de privacidad: [PRIVACY.md](${PRIVACY_URL}).`,
