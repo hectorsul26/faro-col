@@ -11,12 +11,12 @@ import {
 } from "../config.js";
 
 const INDEPENDENCE_NOTICE = [
-  "Faro Col es un proyecto ciudadano independiente.",
+  "Faro Colombia 🇨🇴 es un proyecto ciudadano independiente.",
   "No reemplaza a las autoridades ni a los organismos oficiales de emergencia. Ante una emergencia, llama al 123.",
 ].join("\n");
 
 const START_MESSAGE = [
-  "*Faro Col*",
+  "*Faro Colombia 🇨🇴*",
   "",
   "Bot ciudadano para enviar reportes humanitarios en Colombia a un canal público de alertas.",
   "",
@@ -28,7 +28,7 @@ const START_MESSAGE = [
   "/ayuda",
   "",
   "*Personas desaparecidas*",
-  `Consulta [ColombiaTeBusca](${COLOMBIA_TE_BUSCA_URL}), una plataforma ciudadana independiente de Faro Col.`,
+  `Consulta [ColombiaTeBusca](${COLOMBIA_TE_BUSCA_URL}), una plataforma ciudadana independiente de Faro Colombia 🇨🇴.`,
   "",
   `Los reportes confirmados se publican en [${CHANNEL_USERNAME}](${CHANNEL_URL}).`,
   `Bot público: [${BOT_USERNAME}](${BOT_URL}).`,
@@ -40,9 +40,9 @@ const START_MESSAGE = [
 ].join("\n");
 
 const HELP_MESSAGE = [
-  "*Ayuda de Faro Col*",
+  "*Ayuda de Faro Colombia 🇨🇴*",
   "",
-  "Faro Col recibe reportes ciudadanos humanitarios y los publica en un canal de Telegram para rescatistas y voluntarios.",
+  "Faro Colombia 🇨🇴 recibe reportes ciudadanos humanitarios y los publica en un canal de Telegram para rescatistas y voluntarios.",
   "",
   INDEPENDENCE_NOTICE,
   "",
@@ -53,7 +53,7 @@ const HELP_MESSAGE = [
   "Solo puedes confirmar 3 reportes por hora.",
   "",
   "*Personas desaparecidas*",
-  `Usa [ColombiaTeBusca](${COLOMBIA_TE_BUSCA_URL}). Es una plataforma ciudadana independiente y no comparte datos con Faro Col.`,
+  `Usa [ColombiaTeBusca](${COLOMBIA_TE_BUSCA_URL}). Es una plataforma ciudadana independiente y no comparte datos con Faro Colombia 🇨🇴.`,
   "",
   `Todos los reportes confirmados se publican en [${CHANNEL_USERNAME}](${CHANNEL_URL}) como información ciudadana no verificada.`,
   `Política de privacidad: [PRIVACY.md](${PRIVACY_URL}).`,

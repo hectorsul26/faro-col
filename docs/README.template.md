@@ -1,12 +1,12 @@
 <!-- Este archivo se genera desde docs/README.template.md. No editar directamente: ejecuta npm run docs:sync después de cambiar src/config.ts o esta plantilla. -->
 
-# Faro Col
+# Faro Colombia 🇨🇴
 
 [Bot público]({{BOT_URL}}) · [Canal de alertas]({{CHANNEL_URL}}) · [Repositorio]({{REPO_URL}})
 
-Faro Col es un bot ciudadano de Telegram para recibir reportes humanitarios relacionados con la emergencia sísmica en Colombia y publicarlos en el canal {{CHANNEL_USERNAME}} para rescatistas y voluntarios.
+Faro Colombia 🇨🇴 es un bot ciudadano de Telegram para recibir reportes humanitarios relacionados con la emergencia sísmica en Colombia y publicarlos en el canal {{CHANNEL_USERNAME}} para rescatistas y voluntarios.
 
-**Faro Col es un proyecto ciudadano independiente. No reemplaza a las autoridades ni a los organismos oficiales de emergencia. Ante una emergencia, llama al 123.**
+**Faro Colombia 🇨🇴 es un proyecto ciudadano independiente. No reemplaza a las autoridades ni a los organismos oficiales de emergencia. Ante una emergencia, llama al 123.**
 
 ## Alcance
 
@@ -22,7 +22,7 @@ Tipos de reporte:
 
 Los reportes se identifican con referencias `#FCOL-XXXXX` e incluyen el aviso: “Reporte ciudadano no verificado. No sustituye a organismos oficiales.”
 
-Para buscar personas desaparecidas, consulta [ColombiaTeBusca]({{COLOMBIA_TE_BUSCA_URL}}). Es una plataforma ciudadana independiente de Faro Col. El bot solo publica el enlace: no consulta, automatiza ni intercambia datos con ese sitio.
+Para buscar personas desaparecidas, consulta [ColombiaTeBusca]({{COLOMBIA_TE_BUSCA_URL}}). Es una plataforma ciudadana independiente de Faro Colombia 🇨🇴. El bot solo publica el enlace: no consulta, automatiza ni intercambia datos con ese sitio.
 
 ## Comandos
 
@@ -32,7 +32,7 @@ Para buscar personas desaparecidas, consulta [ColombiaTeBusca]({{COLOMBIA_TE_BUS
 - `/emergencia` — muestra las líneas oficiales de Colombia
 - `/ayuda` — explica el funcionamiento y las limitaciones del bot
 
-Antes de la primera pregunta de un rescate urgente, Faro Col muestra las líneas oficiales y exige confirmar que la persona ya llamó al 123. El botón “Llamar al 123 primero” cierra el flujo.
+Antes de la primera pregunta de un rescate urgente, Faro Colombia 🇨🇴 muestra las líneas oficiales y exige confirmar que la persona ya llamó al 123. El botón “Llamar al 123 primero” cierra el flujo.
 
 ## Líneas oficiales
 
@@ -48,7 +48,7 @@ Antes de la primera pregunta de un rescate urgente, Faro Col muestra las líneas
 - Upstash Redis guarda el borrador durante un máximo de 30 minutos.
 - El identificador técnico usado para limitar abusos expira en un máximo de una hora.
 - El límite es de 3 reportes publicados por usuario en una ventana de una hora.
-- Faro Col no mantiene una base de datos permanente propia de reportes.
+- Faro Colombia 🇨🇴 no mantiene una base de datos permanente propia de reportes.
 
 Consulta la [política de privacidad]({{PRIVACY_URL}}) antes de publicar datos personales o de contacto.
 

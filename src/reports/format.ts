@@ -40,7 +40,8 @@ export function formatConfirmationCard(session: ReportSession): string {
     "",
     "<b>Responsabilidad</b>",
     "Al confirmar declaras que esta informacion es veridica.",
-    "Los reportes falsos dificultan el rescate de personas reales.",
+    "No publiques información falsa, ofensiva o que ponga en riesgo a terceros.",
+    "Los reportes fraudulentos pueden desviar recursos de emergencia reales.",
   ];
 
   return lines.join("\n");
@@ -86,9 +87,7 @@ function formatAlertDetails(record: ChannelReport, reportedAt: Date): string[] {
   const location = escapeHtml(
     truncateAlertText(record.location_name ?? "no indicado", ALERT_LOCATION_MAX_LENGTH)
   );
-  const summary = escapeHtml(
-    truncateAlertText(record.summary ?? "sin descripcion", ALERT_SUMMARY_MAX_LENGTH)
-  );
+  const summary = formatAlertSummary(record);
   const reported = `Reportado: ${escapeHtml(formatAlertDate(reportedAt))}`;
 
   if (record.record_type === "rescate_urgente") {
@@ -121,6 +120,22 @@ function formatAlertDetails(record: ChannelReport, reportedAt: Date): string[] {
 
   lines.push(reported);
   return lines;
+}
+
+function formatAlertSummary(record: ChannelReport): string {
+  const value = record.summary ?? "sin descripcion";
+  const safeSummary =
+    record.record_type === "centro_acopio"
+      ? value
+      : maskPotentialDocumentNumbers(value);
+
+  return escapeHtml(truncateAlertText(safeSummary, ALERT_SUMMARY_MAX_LENGTH));
+}
+
+export function maskPotentialDocumentNumbers(value: string): string {
+  return value.replace(/(?<!\d)\d{6,10}(?!\d)/g, (digits) => {
+    return `${"*".repeat(digits.length - 3)}${digits.slice(-3)}`;
+  });
 }
 
 function formatAlertDate(value: Date): string {

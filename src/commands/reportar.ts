@@ -23,7 +23,7 @@ import { formatAlertMessage, formatConfirmationCard } from "../reports/format.js
 import { EMERGENCY_LINES_TEXT } from "./emergencia.js";
 
 const REPORT_SELECTOR_MESSAGE = [
-  "<b>Reportar en Faro Col</b>",
+  "<b>Reportar en Faro Colombia 🇨🇴</b>",
   "",
   "Selecciona el tipo de reporte disponible ahora.",
   "",
@@ -37,8 +37,11 @@ const RESCUE_GATE_MESSAGE = [
   "",
   EMERGENCY_LINES_TEXT,
   "",
-  "Llama primero al 123. Faro Col es un proyecto ciudadano independiente que complementa la respuesta oficial, pero no reemplaza a las autoridades ni a los organismos oficiales de emergencia.",
+  "Llama primero al 123. Faro Colombia 🇨🇴 es un proyecto ciudadano independiente que complementa la respuesta oficial, pero no reemplaza a las autoridades ni a los organismos oficiales de emergencia.",
 ].join("\n");
+
+const PUBLICATION_WARNING =
+  "📢 Este reporte se publicará en el canal público de inmediato. Evita incluir números de cédula, direcciones exactas de menores o datos que puedan poner en riesgo a alguien.";
 
 const REPORT_TYPES_AVAILABLE_NOW: ReportType[] = [
   "rescate_urgente",
@@ -146,7 +149,10 @@ export function registerReportarCommand(bot: Bot): void {
 
     await setSession(userId, session);
     await ctx.answerCallbackQuery();
-    await ctx.reply(definition.steps[0].prompt, TEXT_NO_PREVIEW);
+    await ctx.reply(
+      buildStepIntroduction(selectedType, definition.steps[0]),
+      TEXT_NO_PREVIEW
+    );
   });
 
   bot.callbackQuery("reportar:rescue_gate:continue", async (ctx) => {
@@ -167,7 +173,10 @@ export function registerReportarCommand(bot: Bot): void {
 
     await setSession(userId, session);
     await ctx.answerCallbackQuery();
-    await ctx.reply(definition.steps[0].prompt, TEXT_NO_PREVIEW);
+    await ctx.reply(
+      buildStepIntroduction("rescate_urgente", definition.steps[0]),
+      TEXT_NO_PREVIEW
+    );
   });
 
   bot.callbackQuery("reportar:rescue_gate:stop", async (ctx) => {
@@ -180,7 +189,7 @@ export function registerReportarCommand(bot: Bot): void {
 
     await ctx.answerCallbackQuery();
     await ctx.reply(
-      "Flujo cerrado. Llama primero al 123: las líneas oficiales son la vía principal para solicitar un rescate. Faro Col es un proyecto ciudadano independiente y no sustituye a las autoridades ni a los organismos oficiales de emergencia.",
+      "Flujo cerrado. Llama primero al 123: las líneas oficiales son la vía principal para solicitar un rescate. Faro Colombia 🇨🇴 es un proyecto ciudadano independiente y no sustituye a las autoridades ni a los organismos oficiales de emergencia.",
       TEXT_NO_PREVIEW
     );
   });
@@ -341,7 +350,10 @@ export function registerReportarCommand(bot: Bot): void {
     await ctx.answerCallbackQuery();
 
     if (nextStep) {
-      await ctx.reply(nextStep.prompt, TEXT_NO_PREVIEW);
+      await ctx.reply(
+        buildStepIntroduction("centro_acopio", nextStep),
+        TEXT_NO_PREVIEW
+      );
       return;
     }
 
@@ -410,6 +422,21 @@ function createSession(
     createdAt: now,
     updatedAt: now,
   };
+}
+
+function buildStepIntroduction(
+  type: ReportType,
+  step: ReportStepDefinition
+): string {
+  const shouldShowWarning =
+    step.key === "description" ||
+    (type === "centro_acopio" && step.key === "title");
+
+  if (!shouldShowWarning) {
+    return step.prompt;
+  }
+
+  return [PUBLICATION_WARNING, "", step.prompt].join("\n");
 }
 
 async function handleReportAnswer(
@@ -509,7 +536,10 @@ async function handleReportAnswer(
       return;
     }
 
-    await reply(nextStep.prompt, TEXT_NO_PREVIEW);
+    await reply(
+      buildStepIntroduction(session.tipo, nextStep),
+      TEXT_NO_PREVIEW
+    );
     return;
   }
 
