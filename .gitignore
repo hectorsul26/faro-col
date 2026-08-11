@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+.env.local
+.vercel/
+.agents/
+.codex/
+npm-debug.log*

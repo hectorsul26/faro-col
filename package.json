@@ -1,0 +1,23 @@
+{
+  "name": "faro-col",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bot ciudadano de Telegram para recibir y publicar reportes humanitarios en Colombia.",
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=.env --import tsx src/dev.ts",
+    "check:report-store": "node --env-file=.env --import tsx scripts/check-report-store.ts",
+    "docs:sync": "tsx scripts/generate-docs.ts",
+    "docs:check": "tsx scripts/generate-docs.ts --check",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.35.3",
+    "grammy": "^1.30.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
