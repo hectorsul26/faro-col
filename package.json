@@ -10,7 +10,7 @@
     "check:report-store": "node --env-file=.env --import tsx scripts/check-report-store.ts",
     "docs:sync": "tsx scripts/generate-docs.ts",
     "docs:check": "tsx scripts/generate-docs.ts --check",
-    "test": "node --import tsx --test tests/reports-format.test.ts",
+    "test": "node --import tsx --test tests/reports-format.test.ts tests/report-confirmation.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

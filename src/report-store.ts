@@ -16,6 +16,10 @@ export type ReportSession = {
   datos: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
+  submission?: {
+    status: "publishing" | "sent";
+    reference: string;
+  };
 };
 
 export type RateLimitResult =

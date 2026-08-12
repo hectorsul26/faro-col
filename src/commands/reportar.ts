@@ -43,6 +43,9 @@ const RESCUE_GATE_MESSAGE = [
 const PUBLICATION_WARNING =
   "📢 Este reporte se publicará en el canal público de inmediato. Evita incluir números de cédula, direcciones exactas de menores o datos que puedan poner en riesgo a alguien.";
 
+const CONTACT_PUBLIC_WARNING =
+  "📞 Este número será público en el canal. Solo compártelo si es de un punto de atención o si tienes autorización de la persona.";
+
 const REPORT_TYPES_AVAILABLE_NOW: ReportType[] = [
   "rescate_urgente",
   "dano_estructural",
@@ -98,6 +101,13 @@ export function registerReportarCommand(bot: Bot): void {
 
     if (!session) {
       await ctx.reply("No tienes un reporte en curso.", TEXT_NO_PREVIEW);
+      return;
+    }
+
+    const submissionMessage = getSubmissionMessage(session);
+
+    if (submissionMessage) {
+      await ctx.reply(submissionMessage, TEXT_NO_PREVIEW);
       return;
     }
 
@@ -198,6 +208,16 @@ export function registerReportarCommand(bot: Bot): void {
     const userId = ctx.from?.id;
     const session = userId ? await getSession(userId) : null;
 
+    const submissionMessage = getSubmissionMessage(session);
+
+    if (submissionMessage) {
+      await ctx.answerCallbackQuery({
+        text: submissionMessage,
+        show_alert: true,
+      });
+      return;
+    }
+
     if (!session || !isCompletedSession(session)) {
       await ctx.answerCallbackQuery({
         text: "Este reporte expiro o no esta listo. Inicia /reportar de nuevo.",
@@ -225,8 +245,13 @@ export function registerReportarCommand(bot: Bot): void {
     const lockAcquired = await acquireSubmissionLock(userId!);
 
     if (!lockAcquired) {
+      const latestSession = await getSession(userId!);
+      const latestSubmissionMessage = getSubmissionMessage(latestSession);
+
       await ctx.answerCallbackQuery({
-        text: "Ya estoy enviando este reporte. Espera unos segundos.",
+        text:
+          latestSubmissionMessage ??
+          "Este reporte se está enviando. No necesitas tocar «Confirmar» de nuevo.",
         show_alert: true,
       });
       return;
@@ -236,10 +261,12 @@ export function registerReportarCommand(bot: Bot): void {
       await ctx.answerCallbackQuery({ text: "Enviando reporte..." });
 
       const reference = await nextRef();
+      await setSession(userId!, markReportAsPublishing(session, reference));
       const record = buildChannelReport(session);
       const alertPublished = await notifyAlertsChannel(ctx, record, reference);
 
       if (!alertPublished) {
+        await setSession(userId!, session);
         await ctx.reply(
           [
             `⚠️ No pudimos publicar tu reporte en ${CHANNEL_USERNAME}.`,
@@ -253,7 +280,7 @@ export function registerReportarCommand(bot: Bot): void {
         return;
       }
 
-      await finalizeSuccessfulReport(userId!);
+      await finalizeSuccessfulReport(userId!, session, reference);
       await ctx.reply(buildReportSentMessage(reference), TEXT_NO_PREVIEW);
     } catch (error) {
       console.error("Failed to finish report flow", error);
@@ -268,6 +295,16 @@ export function registerReportarCommand(bot: Bot): void {
 
   bot.callbackQuery("reportar:cancel", async (ctx) => {
     const userId = ctx.from?.id;
+    const session = userId ? await getSession(userId) : null;
+    const submissionMessage = getSubmissionMessage(session);
+
+    if (submissionMessage) {
+      await ctx.answerCallbackQuery({
+        text: submissionMessage,
+        show_alert: true,
+      });
+      return;
+    }
 
     if (userId) {
       await deleteSession(userId);
@@ -428,15 +465,24 @@ function buildStepIntroduction(
   type: ReportType,
   step: ReportStepDefinition
 ): string {
-  const shouldShowWarning =
-    step.key === "description" ||
-    (type === "centro_acopio" && step.key === "title");
+  const warnings = [];
 
-  if (!shouldShowWarning) {
+  if (
+    step.key === "description" ||
+    (type === "centro_acopio" && step.key === "title")
+  ) {
+    warnings.push(PUBLICATION_WARNING);
+  }
+
+  if (step.key === "contact") {
+    warnings.push(CONTACT_PUBLIC_WARNING);
+  }
+
+  if (warnings.length === 0) {
     return step.prompt;
   }
 
-  return [PUBLICATION_WARNING, "", step.prompt].join("\n");
+  return [...warnings, "", step.prompt].join("\n");
 }
 
 async function handleReportAnswer(
@@ -445,6 +491,13 @@ async function handleReportAnswer(
   session: ReportSession,
   text: string
 ): Promise<void> {
+  const submissionMessage = getSubmissionMessage(session);
+
+  if (submissionMessage) {
+    await reply(submissionMessage, TEXT_NO_PREVIEW);
+    return;
+  }
+
   if (!isReportType(session.tipo)) {
     await deleteSession(userId);
     await reply("El reporte en curso no es valido. Inicia /reportar de nuevo.", TEXT_NO_PREVIEW);
@@ -753,17 +806,21 @@ async function notifyAlertsChannel(
   }
 }
 
-async function finalizeSuccessfulReport(userId: number): Promise<void> {
+async function finalizeSuccessfulReport(
+  userId: number,
+  session: ReportSession,
+  reference: string
+): Promise<void> {
+  try {
+    await setSession(userId, markReportAsSent(session, reference));
+  } catch (error) {
+    console.error("Failed to preserve sent report receipt", error);
+  }
+
   try {
     await recordReportSubmission(userId);
   } catch (error) {
     console.error("Failed to record report rate limit", error);
-  }
-
-  try {
-    await deleteSession(userId);
-  } catch (error) {
-    console.error("Failed to delete completed report session", error);
   }
 }
 
@@ -777,4 +834,47 @@ async function releaseSubmissionLockSafely(userId: number): Promise<void> {
 
 function buildReportSentMessage(reference: string): string {
   return `Reporte enviado. Referencia: ${reference}. Ya es visible en ${CHANNEL_USERNAME}.`;
+}
+
+function markReportAsPublishing(
+  session: ReportSession,
+  reference: string
+): ReportSession {
+  return {
+    ...session,
+    updatedAt: new Date().toISOString(),
+    submission: {
+      status: "publishing",
+      reference,
+    },
+  };
+}
+
+function markReportAsSent(
+  session: ReportSession,
+  reference: string
+): ReportSession {
+  return {
+    tipo: session.tipo,
+    paso: session.paso,
+    datos: {},
+    createdAt: session.createdAt,
+    updatedAt: new Date().toISOString(),
+    submission: {
+      status: "sent",
+      reference,
+    },
+  };
+}
+
+function getSubmissionMessage(session: ReportSession | null): string | null {
+  if (session?.submission?.status === "publishing") {
+    return `Este reporte se está enviando (${session.submission.reference}). No necesitas tocar «Confirmar» de nuevo.`;
+  }
+
+  if (session?.submission?.status === "sent") {
+    return `Este reporte ya fue enviado (${session.submission.reference}).`;
+  }
+
+  return null;
 }
