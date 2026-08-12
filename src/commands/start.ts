@@ -15,20 +15,17 @@ const INDEPENDENCE_NOTICE = [
   "No reemplaza a las autoridades ni a los organismos oficiales de emergencia. Ante una emergencia, llama al 123.",
 ].join("\n");
 
-const ALERT_CHANNEL_PURPOSE =
-  `📡 El canal ${CHANNEL_USERNAME} existe para que rescatistas y voluntarios reciban en tiempo real lo que la comunidad reporta aquí.`;
-
 const MISSING_PEOPLE_NOTICE =
-  `Este bot NO gestiona búsqueda de personas. Para eso existe [ColombiaTeBusca (colombiatebusca.com)](${COLOMBIA_TE_BUSCA_URL}), una plataforma independiente y sin ninguna relación con Faro Colombia — solo la mencionamos aquí como referencia útil.`;
+  `Este bot no gestiona búsqueda de personas. Para eso existe [ColombiaTeBusca (colombiatebusca.com)](${COLOMBIA_TE_BUSCA_URL}) — plataforma independiente, sin relación con este proyecto.`;
 
 const START_MESSAGE = [
   "*Faro Colombia 🇨🇴*",
   "",
-  "Bot ciudadano para enviar reportes humanitarios en Colombia a un canal público de alertas.",
+  `Reporta lo que veas del terremoto —daños, necesidades, refugios, centros de acopio o rescates urgentes— y llega en segundos a rescatistas y voluntarios en [${CHANNEL_USERNAME}](${CHANNEL_URL}).`,
   "",
-  INDEPENDENCE_NOTICE,
+  "Cualquiera puede reportar. El canal es principalmente para rescatistas y voluntarios en terreno.",
   "",
-  ALERT_CHANNEL_PURPOSE,
+  "Proyecto ciudadano independiente. No reemplaza a las autoridades ni a los organismos oficiales de emergencia. Ante una emergencia, llama al 123.",
   "",
   "*Comandos*",
   "/reportar",
@@ -38,23 +35,18 @@ const START_MESSAGE = [
   "*Personas desaparecidas*",
   MISSING_PEOPLE_NOTICE,
   "",
-  `Los reportes confirmados se publican en [${CHANNEL_USERNAME}](${CHANNEL_URL}).`,
-  `Bot público: [${BOT_USERNAME}](${BOT_URL}).`,
-  `Política de privacidad: [PRIVACY.md](${PRIVACY_URL}).`,
-  "",
-  `Contacto: [${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL}).`,
-  `Repositorio: [GitHub](${REPO_URL}).`,
-  "Creado por: Ing. Héctor Sulbarán",
+  `Bot: [${BOT_USERNAME}](${BOT_URL}) · Canal: [${CHANNEL_USERNAME}](${CHANNEL_URL})`,
+  `Privacidad: [PRIVACY.md](${PRIVACY_URL}) · Contacto: [${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL})`,
+  `Repositorio: [GitHub](${REPO_URL}) · Creado por: Ing. Héctor Sulbarán`,
 ].join("\n");
 
 const HELP_MESSAGE = [
   "*Ayuda de Faro Colombia 🇨🇴*",
   "",
-  "Faro Colombia 🇨🇴 recibe reportes ciudadanos humanitarios y los publica en un canal de Telegram para rescatistas y voluntarios.",
+  "Cualquier persona puede reportar daños, necesidades, refugios, centros de acopio o rescates urgentes.",
+  `El canal ${CHANNEL_USERNAME} está dirigido principalmente a rescatistas y voluntarios en terreno; no es exclusivo para personas ya organizadas en labores de rescate.`,
   "",
   INDEPENDENCE_NOTICE,
-  "",
-  ALERT_CHANNEL_PURPOSE,
   "",
   "*Cómo usarlo*",
   "/reportar abre el flujo guiado para rescate urgente, daño estructural, suministros, refugio o centro de acopio.",
